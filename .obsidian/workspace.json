@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Setting up env for YOLO.md",
+                "file": "Datasets.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Setting up env for YOLO"
+              "title": "Datasets"
             }
           }
         ],
@@ -109,7 +109,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Setting up env for YOLO.md",
+                "file": "Datasets.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -119,7 +119,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Setting up env for YOLO"
+              "title": "Backlinks for Datasets"
             }
           },
           {
@@ -128,12 +128,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Setting up env for YOLO.md",
+                "file": "Datasets.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Setting up env for YOLO"
+              "title": "Outgoing links from Datasets"
             }
           },
           {
@@ -157,13 +157,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Setting up env for YOLO.md",
+                "file": "Datasets.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Setting up env for YOLO"
+              "title": "Outline of Datasets"
             }
           }
         ]
@@ -185,6 +185,9 @@
   },
   "active": "dfc1f7894f794c68",
   "lastOpenFiles": [
+    "Setting up env for YOLO.md",
+    "dataset.ipynb",
+    "YOLO.md",
     "yolo.ipynb",
     "bus.jpg",
     "bus.jpg.fb3b4c255dc14965b3934cf6c144ba30.partial",
@@ -192,8 +195,6 @@
     "yolov8n.pt.4c27887ea8ad41eeb6b9fb9a1e4090cd.partial",
     "test.py",
     "Setting.md",
-    "Setting up env for YOLO.md",
-    "YOLO.md",
     "Contents.md",
     "Datasets.md",
     "Pasted image 20250518045909.png",
