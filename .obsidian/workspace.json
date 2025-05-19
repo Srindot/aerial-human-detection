@@ -27,16 +27,64 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Datasets.md",
+                "file": "Setting up env for YOLO.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Datasets"
+              "title": "Setting up env for YOLO"
+            }
+          },
+          {
+            "id": "b23c2126298d906c",
+            "type": "leaf",
+            "state": {
+              "type": "image",
+              "state": {
+                "file": "Pasted image 20250518043214.png"
+              },
+              "icon": "lucide-image",
+              "title": "Pasted image 20250518043214"
+            }
+          },
+          {
+            "id": "a703f374bde32f85",
+            "type": "leaf",
+            "state": {
+              "type": "image",
+              "state": {
+                "file": "Pasted image 20250518045124.png"
+              },
+              "icon": "lucide-image",
+              "title": "Pasted image 20250518045124"
+            }
+          },
+          {
+            "id": "3478c4d5914d8bdc",
+            "type": "leaf",
+            "state": {
+              "type": "image",
+              "state": {
+                "file": "Pasted image 20250518045415.png"
+              },
+              "icon": "lucide-image",
+              "title": "Pasted image 20250518045415"
+            }
+          },
+          {
+            "id": "46c63d5bd6b14d74",
+            "type": "leaf",
+            "state": {
+              "type": "image",
+              "state": {
+                "file": "Pasted image 20250519041210.png"
+              },
+              "icon": "lucide-image",
+              "title": "Pasted image 20250519041210"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 5
       }
     ],
     "direction": "vertical"
@@ -183,23 +231,33 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "dfc1f7894f794c68",
+  "active": "d5f751565ed4d214",
   "lastOpenFiles": [
-    "Setting up env for YOLO.md",
-    "dataset.ipynb",
-    "YOLO.md",
-    "yolo.ipynb",
-    "bus.jpg",
-    "bus.jpg.fb3b4c255dc14965b3934cf6c144ba30.partial",
-    "yolov8n.pt",
-    "yolov8n.pt.4c27887ea8ad41eeb6b9fb9a1e4090cd.partial",
-    "test.py",
-    "Setting.md",
-    "Contents.md",
-    "Datasets.md",
-    "Pasted image 20250518045909.png",
     "Pasted image 20250518045415.png",
     "Pasted image 20250518045124.png",
-    "Pasted image 20250518043214.png"
+    "Pasted image 20250518043214.png",
+    "Setting up env for YOLO.md",
+    "Images",
+    "Pasted image 20250519041210.png",
+    "Pasted image 20250518045909.png",
+    "Datasets.md",
+    "Contents.md",
+    "bus.jpg",
+    "Untitled.md",
+    "runs/detect/yolov8n_custom32/confusion_matrix.png",
+    "runs/detect/yolov8n_custom32/confusion_matrix_normalized.png",
+    "runs/detect/yolov8n_custom32/val_batch0_pred.jpg",
+    "runs/detect/yolov8n_custom32/val_batch0_labels.jpg",
+    "runs/detect/yolov8n_custom32",
+    "my_custom_yolov8n.pt",
+    "runs/detect/yolov8n_custom3/weights/best.pt",
+    "runs/detect/yolov8n_custom3/weights/last.pt",
+    "runs/detect/yolov8n_custom3/results.csv",
+    "runs/detect/yolov8n_custom3/weights",
+    "runs/detect/yolov8n_custom3/args.yaml",
+    "runs/detect/yolov8n_custom3",
+    "Dataset/Dataset1/labels/train/000033.txt",
+    "YOLO.md",
+    "Setting.md"
   ]
 }
