@@ -1,0 +1,6 @@
+path: /home/stimpy/projects/nidar_competition/Dataset/Dataset2
+train: train/train
+val: test/test
+
+names:
+  0: person

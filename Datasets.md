@@ -4,7 +4,7 @@ The below are some of the datasets available in the internet
    ![[Pasted image 20250518043214.png]]
    Issues with the Dataset
    - The height and elevation angle might be a issue
-   - has weird numbers I dont know what that is 
+   - has weird numbers I don't know what that is 
    - The only dataset which is available but, seems like it is fitted to the people.
    - 
 
