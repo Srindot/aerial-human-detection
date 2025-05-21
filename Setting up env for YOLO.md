@@ -14,6 +14,15 @@ and run this command to setup YOLO with cuda support
 conda install -c pytorch -c nvidia -c conda-forge pytorch torchvision pytorch-cuda=11.8 ultralytics
 ```
 
+## For real time yolo 
+install this in the conda env 
+
+```bash
+	pip install ultralytics opencv-python pyrealsense2
+```
+
+and then run the realtime_yolo.py
+
 Run the following command to check whether Yolo is setup or not:
 ```python 
 import ultralytics
