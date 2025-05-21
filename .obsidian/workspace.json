@@ -185,6 +185,10 @@
   },
   "active": "c7f81e4839e1d839",
   "lastOpenFiles": [
+    "runs/detect/person_detector11/train_batch4307.jpg",
+    "runs/detect/person_detector11/train_batch4306.jpg",
+    "runs/detect/person_detector11/train_batch4305.jpg",
+    "README.md",
     "Yolo Deployment.md",
     "runs/detect/person_detector8/weights",
     "runs/detect/person_detector8/args.yaml",
@@ -206,8 +210,6 @@
     "YOLO.md",
     "Setting up env for YOLO.md",
     "Pasted image 20250518045909.png",
-    "Pasted image 20250518045415.png",
-    "Pasted image 20250518043214.png",
     "Contents.md",
     "Datasets.md",
     "Setting.md"
