@@ -20,3 +20,12 @@ Another have to test, how it works exactly over the person
 - **Generalization:** Including a variety of perspectives (top, front, side, etc.) in your training/fine-tuning set helps the model generalize and perform well in all those scenarios[1](https://github.com/J3lly-Been/YOLOv8-HumanDetection)[5](https://blog.roboflow.com/how-to-train-yolov8-on-a-custom-dataset/).
     
 - **Annotation Consistency:** Make sure your bounding boxes are consistent across all perspectives (e.g., always annotate the full body, not just the head or face), so the model learns the correct object extent.
+
+
+## Yolo Fine tuning 
+
+The YOLO algorithm has been fine tuned, to detect people from overhead view.
+The data set which was used is for fine tuning is the first one in the [here](Datasets).
+The final error was:
+
+The results:

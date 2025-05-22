@@ -27,16 +27,30 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Setting up env for YOLO.md",
+                "file": "Yolo Deployment.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Setting up env for YOLO"
+              "title": "Yolo Deployment"
+            }
+          },
+          {
+            "id": "ab00f8c9c66ed648",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Yolo Deployment.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Yolo Deployment"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -183,35 +197,34 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "c7f81e4839e1d839",
+  "active": "ab00f8c9c66ed648",
   "lastOpenFiles": [
-    "runs/detect/person_detector11/train_batch4307.jpg",
-    "runs/detect/person_detector11/train_batch4306.jpg",
-    "runs/detect/person_detector11/train_batch4305.jpg",
-    "README.md",
+    "Datasets.md",
     "Yolo Deployment.md",
+    "YOLO.md",
+    "Setting up env for YOLO.md",
+    "overhead_person_detection.pt",
+    "runs/detect/person_detector112/confusion_matrix.png",
+    "runs/detect/person_detector112/confusion_matrix_normalized.png",
+    "runs/detect/person_detector112/R_curve.png",
+    "runs/detect/person_detector112/P_curve.png",
+    "runs/detect/person_detector112/F1_curve.png",
+    "runs/detect/person_detector112/PR_curve.png",
+    "runs/detect/person_detector112/val_batch2_labels.jpg",
+    "runs/detect/person_detector112/val_batch2_pred.jpg",
+    "runs/detect/person_detector112/val_batch1_pred.jpg",
+    "runs/detect/person_detector112/val_batch0_pred.jpg",
+    "runs/detect/person_detector112",
+    "README.md",
     "runs/detect/person_detector8/weights",
     "runs/detect/person_detector8/args.yaml",
     "runs/detect/person_detector8",
     "runs/detect/person_detector7/weights",
     "runs/detect/person_detector7/args.yaml",
     "runs/detect/person_detector7",
-    "runs/detect/person_detector6/labels.jpg",
-    "runs/detect/person_detector6/labels_correlogram.jpg",
     "runs/detect/person_detector6/weights",
     "runs/detect/person_detector6/args.yaml",
-    "runs/detect/person_detector6",
-    "runs/detect/person_detector5/weights/best.pt",
-    "runs/detect/person_detector5/train_batch2.jpg",
-    "runs/detect/person_detector5/train_batch1.jpg",
-    "runs/detect/person_detector5/train_batch0.jpg",
-    "runs/detect/person_detector5/labels.jpg",
-    "runs/detect/person_detector5/labels_correlogram.jpg",
-    "YOLO.md",
-    "Setting up env for YOLO.md",
-    "Pasted image 20250518045909.png",
     "Contents.md",
-    "Datasets.md",
     "Setting.md"
   ]
 }
