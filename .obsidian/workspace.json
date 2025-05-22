@@ -199,6 +199,9 @@
   },
   "active": "ab00f8c9c66ed648",
   "lastOpenFiles": [
+    "Pasted image 20250522161046.png",
+    "Pasted image 20250522161013.png",
+    "Pasted image 20250522160951.png",
     "Datasets.md",
     "Yolo Deployment.md",
     "YOLO.md",
@@ -212,8 +215,6 @@
     "runs/detect/person_detector112/PR_curve.png",
     "runs/detect/person_detector112/val_batch2_labels.jpg",
     "runs/detect/person_detector112/val_batch2_pred.jpg",
-    "runs/detect/person_detector112/val_batch1_pred.jpg",
-    "runs/detect/person_detector112/val_batch0_pred.jpg",
     "runs/detect/person_detector112",
     "README.md",
     "runs/detect/person_detector8/weights",

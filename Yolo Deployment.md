@@ -27,5 +27,14 @@ Another have to test, how it works exactly over the person
 The YOLO algorithm has been fine tuned, to detect people from overhead view.
 The data set which was used is for fine tuning is the first one in the [here](Datasets).
 The final error was:
-
+![[Pasted image 20250522160951.png]]
 The results:
+- normal view :
+![[Pasted image 20250522161013.png]]
+
+
+- overhead view:
+![[Pasted image 20250522161046.png]]
+
+So, the model works well in the overhead but loses all the memory of detecting from ahead.
+Another issue is the height is not sufficient, and requires fine tuning from irl data.
