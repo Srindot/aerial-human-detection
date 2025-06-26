@@ -1,0 +1,30 @@
+{
+  "name": "Jetson Xavier ROS Noetic + RealSense Dev",
+  "build": {
+    "dockerfile": "dockerfile",
+    "context": "."
+  },
+  "runArgs": [
+    "--privileged",        // Needed for USB device passthrough (RealSense)
+    "--network=host"       // Use host network for ROS communication
+  ],
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "python.pythonPath": "/usr/bin/python3"
+  },
+  "extensions": [
+    "ms-iot.vscode-ros",           // ROS extension for VSCode
+    "ms-python.python",            // Python support
+    "twxs.cmake"                   // CMake support
+  ],
+  "remoteUser": "rosuser",
+  "postCreateCommand": "",        // Removed the ROS source command
+  "containerEnv": {
+    "DISPLAY": "${env:DISPLAY}",
+    "ROS_DOMAIN_ID": "0",
+    "CUDA_VERSION": "11.4"
+  },
+  "mounts": [
+    "source=/dev,target=/dev,type=bind,consistency=cached"  // Mount the entire /dev
+  ]
+}
