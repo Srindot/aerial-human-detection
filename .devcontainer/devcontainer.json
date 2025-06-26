@@ -1,7 +1,7 @@
 {
   "name": "Jetson Xavier ROS Noetic + RealSense Dev",
   "build": {
-    "dockerfile": "dockerfile",
+    "dockerfile": "Dockerfile",
     "context": "."
   },
   "runArgs": [
@@ -17,7 +17,7 @@
     "ms-python.python",            // Python support
     "twxs.cmake"                   // CMake support
   ],
-  "remoteUser": "rosuser",
+  "remoteUser": "container_user",
   "postCreateCommand": "",        // Removed the ROS source command
   "containerEnv": {
     "DISPLAY": "${env:DISPLAY}",
