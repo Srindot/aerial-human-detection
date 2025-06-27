@@ -1,0 +1,6 @@
+path: .
+train: train
+val: test
+
+names:
+  0: person
