@@ -12,7 +12,7 @@
   },
   
   "workspaceFolder": "/home/container_user/catkin_make",
-  "workspaceMount": "type=bind,source=${localWorkspaceFolder},target=/home/container_user/catkin_make/src/yolo_human_detection",
+  "workspaceMount": "type=bind,source=${localWorkspaceFolder},target=/home/container_user/catkin_make/src/realsense_human_detector",
   
   "extensions": [
     "ms-iot.vscode-ros",           // ROS extension for VSCode

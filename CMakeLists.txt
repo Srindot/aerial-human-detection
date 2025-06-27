@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(yolo_vyolo_human_detectionision)
+project(realsense_human_detector)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -8,7 +8,9 @@ project(yolo_vyolo_human_detectionision)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  cv_bridge
   rospy
+  sensor_msgs
   std_msgs
 )
 
@@ -69,7 +71,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   std_msgs
+#   sensor_msgs#   std_msgs
 # )
 
 ################################################
@@ -103,8 +105,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES yolo_vision
-#  CATKIN_DEPENDS rospy std_msgs
+#  LIBRARIES realsense_human_detector
+#  CATKIN_DEPENDS cv_bridge rospy sensor_msgs std_msgs
 #  DEPENDS system_lib
 )
 
@@ -121,7 +123,7 @@ include_directories(
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/yolo_vision.cpp
+#   src/${PROJECT_NAME}/realsense_human_detector.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -132,7 +134,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/yolo_vision_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/realsense_human_detector_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -196,7 +198,7 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_yolo_vision.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_realsense_human_detector.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
