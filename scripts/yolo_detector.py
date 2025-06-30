@@ -1,59 +1,76 @@
-import rclpy
-from rclpy.node import Node
-from sensor_msgs.msg import Image
-from vision_msgs.msg import Detection2DArray, Detection2D, ObjectHypothesisWithPose
-from cv_bridge import CvBridge
+#!/usr/bin/env python3
+
+import rospy
 import cv2
 import torch
+from cv_bridge import CvBridge
+from sensor_msgs.msg import Image
+from vision_msgs.msg import Detection2DArray, Detection2D, ObjectHypothesisWithPose
 
-class YoloDetector(Node):
+class YoloDetector:
     def __init__(self):
-        super().__init__('yolo_detector')
-        self.declare_parameter('camera_topic', '/camera/color/image_raw')
-        self.declare_parameter('bbox_topic', '/yolo/bboxes')
-        self.declare_parameter('model_path', 'models/yolov8n.pt')
+        rospy.init_node("yolo_detector_node")
 
-        self.camera_topic = self.get_parameter('camera_topic').value
-        self.bbox_topic = self.get_parameter('bbox_topic').value
-        self.model_path = self.get_parameter('model_path').value
+        # Parameters
+        self.image_topic = rospy.get_param("~image_topic", "/camera/color/image_raw")
+        self.bbox_topic = rospy.get_param("~bbox_topic", "/yolo/bboxes")
+        self.model_path = rospy.get_param("~model_path", "/home/container_user/models/yolov8n.pt")
 
+        # Init tools
         self.bridge = CvBridge()
-        self.publisher = self.create_publisher(Detection2DArray, self.bbox_topic, 10)
-        self.subscription = self.create_subscription(Image, self.camera_topic, self.image_callback, 10)
-        
-        self.model = torch.hub.load('ultralytics/yolov5', 'custom', path=self.model_path)
-        self.model.conf = 0.4
-        self.get_logger().info("YOLO model loaded")
+        self.pub = rospy.Publisher(self.bbox_topic, Detection2DArray, queue_size=10)
+
+        # Load model BEFORE subscribing
+        try:
+            rospy.loginfo(f"Loading YOLO model from: {self.model_path}")
+            self.model = torch.hub.load('ultralytics/yolov5', 'custom', path=self.model_path)
+            self.model.conf = 0.4
+            rospy.loginfo("YOLO model loaded successfully.")
+        except Exception as e:
+            rospy.logerr(f"Failed to load YOLO model: {e}")
+            rospy.signal_shutdown("Model load failed")
+            return
+
+        # Now that the model is loaded, subscribe
+        self.sub = rospy.Subscriber(self.image_topic, Image, self.image_callback)
 
     def image_callback(self, msg):
+        if not hasattr(self, 'model'):
+            rospy.logwarn("Model not loaded yet.")
+            return
+
         try:
             frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
             results = self.model(frame)
+
             detections = Detection2DArray()
+            detections.header = msg.header
 
             for *xyxy, conf, cls in results.xyxy[0]:
-                if int(cls) == 0:  # class 0 usually means person
-                    detection = Detection2D()
-                    hypothesis = ObjectHypothesisWithPose()
-                    hypothesis.id = 0
-                    hypothesis.score = float(conf)
-                    detection.results.append(hypothesis)
-                    x1, y1, x2, y2 = map(int, xyxy)
-                    detection.bbox.center.position.x = (x1 + x2) / 2.0
-                    detection.bbox.center.position.y = (y1 + y2) / 2.0
-                    detection.bbox.size_x = x2 - x1
-                    detection.bbox.size_y = y2 - y1
-                    detections.detections.append(detection)
+                if int(cls) == 0:  # Class 0 = person
+                    det = Detection2D()
+                    det.header = msg.header
 
-            detections.header = msg.header
-            self.publisher.publish(detections)
+                    hypothesis = ObjectHypothesisWithPose()
+                    hypothesis.id = int(cls)
+                    hypothesis.score = float(conf)
+                    det.results.append(hypothesis)
+
+                    x1, y1, x2, y2 = map(float, xyxy)
+                    det.bbox.center.position.x = (x1 + x2) / 2.0
+                    det.bbox.center.position.y = (y1 + y2) / 2.0
+                    det.bbox.size_x = x2 - x1
+                    det.bbox.size_y = y2 - y1
+                    detections.detections.append(det)
+
+            self.pub.publish(detections)
 
         except Exception as e:
-            self.get_logger().error(f"Error processing image: {e}")
+            rospy.logerr(f"Failed to process image: {e}")
 
-def main(args=None):
-    rclpy.init(args=args)
+    def run(self):
+        rospy.spin()
+
+if __name__ == "__main__":
     node = YoloDetector()
-    rclpy.spin(node)
-    node.destroy_node()
-    rclpy.shutdown()
+    node.run()
