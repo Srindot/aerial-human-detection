@@ -1,0 +1,44 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Start roscore",
+        "type": "shell",
+        "command": "gnome-terminal",
+        "args": [
+          "--",
+          "bash",
+          "-c",
+          "source /opt/ros/noetic/setup.bash && roscore"
+        ],
+        "problemMatcher": [],
+        "isBackground": true
+      },
+      {
+        "label": "Launch RealSense camera",
+        "type": "shell",
+        "command": "gnome-terminal",
+        "args": [
+          "--",
+          "bash",
+          "-c",
+          "source /opt/ros/noetic/setup.bash && source ~/realsense_ws/devel/setup.bash && roslaunch realsense2_camera rs_camera.launch"
+        ],
+        "problemMatcher": [],
+        "dependsOn": ["Start roscore"],
+        "isBackground": true
+      },
+      {
+        "label": "Run YOLO script with LD_PRELOAD",
+        "type": "shell",
+        "command": "bash",
+        "args": [
+          "-c",
+          "source /opt/ros/noetic/setup.bash && conda activate yolo_env && LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1 python3 test.py"
+        ],
+        "dependsOn": ["Launch RealSense camera"],
+        "problemMatcher": []
+      }
+    ]
+  }
+  

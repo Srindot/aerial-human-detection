@@ -16,7 +16,7 @@ RUN apt-get update && \
         libssl-dev libusb-1.0-0-dev pkg-config \
         libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev libgtk-3-dev \
         v4l-utils udev bc libjpeg-dev libpng-dev \
-        python3 python3-pip python3-dev python3-yaml python3-venv python3-zmq && \
+        python3 python3-pip python3-dev python3-yaml python3-zmq && \
     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
     dpkg-reconfigure --frontend noninteractive tzdata && \
     locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8 && \
@@ -47,20 +47,16 @@ USER root
 RUN cd /home/container_user/librealsense/build && make install
 
 # --- Install ROS packages ---
-COPY --chown=container_user:container_user rosPkgs.list /tmp/rosPkgs.list
+COPY rosPkgs.list /tmp/rosPkgs.list
 RUN apt-get update && \
     apt-get install -y --no-install-recommends $(cat /tmp/rosPkgs.list) && \
     rm -rf /var/lib/apt/lists/*
 
-# --- Create and install Python venv for YOLOv8 ---
-COPY --chown=container_user:container_user yolo-requirements.txt /tmp/yolo-requirements.txt
+# --- Install Python packages into system Python ---
+COPY yolo-requirements.txt /tmp/yolo-requirements.txt
 
-USER container_user
-WORKDIR /home/container_user
-
-RUN python3 -m venv yolo_env && \
-    /home/container_user/yolo_env/bin/pip install --upgrade pip && \
-    /home/container_user/yolo_env/bin/pip install -r /tmp/yolo-requirements.txt
-
-# --- Final CMD ---
-CMD ["/bin/bash"]
+# GPU-enabled PyTorch for Jetson Xavier (JetPack 5.1, CUDA 11.4)
+RUN pip3 install --upgrade pip && \
+    pip3 install torch==1.13.0+nv22.12 torchvision==0.14.0+nv22.12 \
+        -f https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch_stable.html && \
+    pip3 install -r /tmp/yolo-requirements.txt
