@@ -55,8 +55,5 @@ RUN apt-get update && \
 # --- Install Python packages into system Python ---
 COPY yolo-requirements.txt /tmp/yolo-requirements.txt
 
-# GPU-enabled PyTorch for Jetson Xavier (JetPack 5.1, CUDA 11.4)
 RUN pip3 install --upgrade pip && \
-    pip3 install torch==1.13.0+nv22.12 torchvision==0.14.0+nv22.12 \
-        -f https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch_stable.html && \
     pip3 install -r /tmp/yolo-requirements.txt
