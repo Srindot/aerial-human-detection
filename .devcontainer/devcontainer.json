@@ -1,7 +1,7 @@
 {
   "name": "Jetson Xavier ROS Noetic + RealSense Dev",
-  "image":"ghcr.io/srindot/ros_noetic_realsense:arm64_latest",
-    "platform": "linux/arm64", // Only do this in x86 
+  "image":"ghcr.io/srindot/ros_noetic_realsense:latest",
+  // "platform": "linux/arm64", // Only do this in x86 
   "privileged": true,
   "runArgs": [
     "--privileged",        // Needed for USB device passthrough (RealSense)

@@ -14,17 +14,17 @@ ENV LANG=en_US.UTF-8 \
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         tzdata locales curl ca-certificates lsb-release software-properties-common \
-        build-essential git wget gnupg sudo \
+        build-essential git wget gnupg sudo cmake \
         libssl-dev libusb-1.0-0-dev pkg-config \
         libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev libgtk-3-dev \
         v4l-utils udev bc libjpeg-dev libpng-dev \
-        cmake && \
+        python3 python3-pip python3-dev python3-yaml && \
     ln -fs /usr/share/zoneinfo/$TZ /etc/localtime && \
     dpkg-reconfigure --frontend noninteractive tzdata && \
     locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8 && \
     rm -rf /var/lib/apt/lists/*
 
-# --- CUDA env vars (Jetson-friendly) ---
+# --- CUDA env vars ---
 ENV CUDA_VERSION=11.4
 ENV LD_LIBRARY_PATH=/usr/local/cuda/lib64:${LD_LIBRARY_PATH:-}
 
@@ -48,8 +48,7 @@ RUN git config --global http.postBuffer 524288000 && \
 
 # --- Build librealsense ---
 WORKDIR /home/container_user/librealsense
-RUN mkdir -p build && cd build && \
-    cmake ../ && make clean && make -j$(nproc)
+RUN mkdir -p build && cd build && cmake ../ && make clean && make -j$(nproc)
 
 # --- Install librealsense ---
 USER root
@@ -61,7 +60,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends $(cat /tmp/rosPkgs.list) && \
     rm -rf /var/lib/apt/lists/*
 
-# --- Install Miniforge (Architecture-aware) ---
+# --- Install Miniforge for Conda ---
 ARG TARGETARCH
 RUN if [ "$TARGETARCH" = "arm64" ]; then \
         curl -sL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-aarch64.sh -o miniforge.sh ; \
@@ -72,18 +71,17 @@ RUN if [ "$TARGETARCH" = "arm64" ]; then \
     rm miniforge.sh && \
     conda clean -afy
 
-# --- Copy and create conda environment ---
+# --- Conda environment for YOLO ---
 COPY --chown=container_user:container_user environment.yml /tmp/environment.yml
 RUN conda env create -f /tmp/environment.yml && conda clean -afy
 
-# --- Set up environment activation ---
+# --- Set up shell initialization ---
 RUN echo "source /opt/conda/etc/profile.d/conda.sh" >> /home/container_user/.bashrc && \
     echo "conda activate yolo" >> /home/container_user/.bashrc && \
+    echo "source /opt/ros/noetic/setup.bash" >> /home/container_user/.bashrc && \
     chown container_user:container_user /home/container_user/.bashrc
 
-# --- Switch back to user and set up ROS ---
 USER container_user
 WORKDIR /home/container_user
-RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 
 CMD ["/bin/bash"]

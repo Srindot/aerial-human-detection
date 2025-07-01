@@ -17,6 +17,3 @@ dependencies:
       - torchaudio
       - ultralytics
       - pyrealsense2
-      - rospkg
-      - netifaces
-      - dill
