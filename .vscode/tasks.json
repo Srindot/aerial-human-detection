@@ -1,44 +1,56 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-      {
-        "label": "Start roscore",
-        "type": "shell",
-        "command": "gnome-terminal",
-        "args": [
-          "--",
-          "bash",
-          "-c",
-          "source /opt/ros/noetic/setup.bash && roscore"
-        ],
-        "problemMatcher": [],
-        "isBackground": true
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "roscore",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-c",
+        "source /opt/ros/noetic/setup.bash && roscore"
+      ],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
       },
-      {
-        "label": "Launch RealSense camera",
-        "type": "shell",
-        "command": "gnome-terminal",
-        "args": [
-          "--",
-          "bash",
-          "-c",
-          "source /opt/ros/noetic/setup.bash && source ~/realsense_ws/devel/setup.bash && roslaunch realsense2_camera rs_camera.launch"
-        ],
-        "problemMatcher": [],
-        "dependsOn": ["Start roscore"],
-        "isBackground": true
+      "problemMatcher": []
+    },
+    {
+      "label": "Launch RealSense Camera",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-c",
+        "source /opt/ros/noetic/setup.bash && roslaunch realsense2_camera rs_camera.launch"
+      ],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
       },
-      {
-        "label": "Run YOLO script with LD_PRELOAD",
-        "type": "shell",
-        "command": "bash",
-        "args": [
-          "-c",
-          "source /opt/ros/noetic/setup.bash && conda activate yolo_env && LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1 python3 test.py"
-        ],
-        "dependsOn": ["Launch RealSense camera"],
-        "problemMatcher": []
-      }
-    ]
-  }
-  
+      "problemMatcher": []
+    },
+    {
+      "label": "Run Human Detector Script",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-c",
+        "source /opt/ros/noetic/setup.bash && LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1 python3 src/realsense_human_detector/scripts/test.py"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/catkin_make"
+      },
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
