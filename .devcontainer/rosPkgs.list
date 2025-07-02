@@ -11,5 +11,3 @@ ros-noetic-ddynamic-reconfigure
 ros-noetic-realsense2-camera
 ros-noetic-rviz
 python3-rospkg
-python3-numpy
-
