@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>realsense_human_detector</name>
+  <version>0.1.0</version>
+  <description>Human detection from RealSense RGB frames using YOLO and rospy.</description>
+
+  <maintainer email="container_user@todo.todo">container_user</maintainer>
+  <license>MIT</license>
+
+  <!-- Build tool -->
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- Build dependencies -->
+  <build_depend>rospy</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>cv_bridge</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>vision_msgs</build_depend>
+
+  <!-- Export dependencies -->
+  <build_export_depend>rospy</build_export_depend>
+  <build_export_depend>sensor_msgs</build_export_depend>
+  <build_export_depend>cv_bridge</build_export_depend>
+  <build_export_depend>std_msgs</build_export_depend>
+  <build_export_depend>vision_msgs</build_export_depend>
+
+  <!-- Execution dependencies -->
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>cv_bridge</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>vision_msgs</exec_depend>
+
+  <export>
+    <!-- No additional export tags needed -->
+  </export>
+</package>

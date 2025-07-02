@@ -1,0 +1,48 @@
+{
+  "name": "Jetson Xavier ROS Noetic + RealSense Dev",
+  "image": "ghcr.io/srindot/ros_noetic_realsense:latest",
+
+  // Allow full device and GPU access for Jetson & camera
+  "privileged": true,
+  "runArgs": [
+    "--runtime=nvidia",
+    "--network=host",
+    "--device=/dev/video0",  // RealSense camera
+    "--device=/dev/nvhost-ctrl",
+    "--device=/dev/nvhost-ctrl-gpu",
+    "--device=/dev/nvhost-prof-gpu",
+    "--device=/dev/nvmap",
+    "--device=/dev/nvhost-gpu"
+  ],
+
+  // Container environment for ROS + GPU
+  "containerEnv": {
+    "DISPLAY": "${env:DISPLAY}",
+    "NVIDIA_VISIBLE_DEVICES": "all",
+    "NVIDIA_DRIVER_CAPABILITIES": "compute,utility",
+    "ROS_DOMAIN_ID": "0"
+  },
+
+  // Mount your source directory into the container
+  "workspaceFolder": "/home/container_user/catkin_make/src/realsense_human_detector",
+  "workspaceMount": "type=bind,source=${localWorkspaceFolder},target=/home/container_user/catkin_make/src/realsense_human_detector",
+
+  // VS Code extensions
+  "extensions": [
+    "ms-iot.vscode-ros",
+    "ms-python.python",
+    "twxs.cmake"
+  ],
+
+  // Run container as your user
+  "remoteUser": "container_user",
+
+  // Skip unnecessary post-create actions
+  "postCreateCommand": "",
+
+  // Use bash as default terminal
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash",
+    "python.pythonPath": "/usr/bin/python3"
+  }
+}

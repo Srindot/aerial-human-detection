@@ -1,0 +1,17 @@
+# Ignore Obsidian workspace files
+.obsidian/
+
+# Ignore dataset and training output folders
+Dataset/
+runs/
+
+# Ignore model weights and checkpoints
+*.pt
+scripts/yolo8n.pt
+
+# Ignore data files
+*.csv
+
+# Ignore ROS bag files
+*.bag
+*.bag
