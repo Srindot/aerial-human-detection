@@ -24,10 +24,10 @@ RUN apt-get update && \
 
 # --- Install PyTorch manually for JetPack 5.1.2 (L4T 35.4.1) ---
 RUN pip3 uninstall -y torch torchvision torchaudio && \
-    pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch_stable.html \
-        torch==2.2.0+nv23.12 \
-        torchvision==0.17.0+nv23.12 \
-        torchaudio==2.2.0
+    pip3 install torch==2.2.0+nv23.12 \
+                torchvision==0.17.0+nv23.12 \
+                torchaudio==2.2.0 \
+    -f https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch_stable.html
 
 # --- ROS Noetic ---
 RUN echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list && \
