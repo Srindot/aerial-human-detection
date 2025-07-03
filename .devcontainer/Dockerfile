@@ -22,11 +22,11 @@ RUN apt-get update && \
     locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8 && \
     rm -rf /var/lib/apt/lists/*
 
-# --- Install PyTorch manually for JetPack 5.1.2 (L4T 35.4.1) ---
+# --- Install PyTorch for JetPack 5.1.2 (L4T 35.4.1) ---
 RUN pip3 uninstall -y torch torchvision torchaudio && \
-    pip3 install torch==2.2.0+nv23.12 \
-                torchvision==0.17.0+nv23.12 \
-                torchaudio==2.2.0 \
+    pip3 install torch==2.0.0+nv23.5 \
+                  torchvision==0.15.1 \
+                  torchaudio==2.0.1 \
     -f https://developer.download.nvidia.com/compute/redist/jp/v512/pytorch/torch_stable.html
 
 # --- ROS Noetic ---
@@ -59,7 +59,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends $(cat /tmp/rosPkgs.list) && \
     rm -rf /var/lib/apt/lists/*
 
-# --- Install Python packages into system Python ---
+# --- Install Python packages for YOLO ---
 COPY yolo-requirements.txt /tmp/yolo-requirements.txt
 RUN pip3 install --upgrade pip && \
     pip3 install --no-cache-dir -r /tmp/yolo-requirements.txt
