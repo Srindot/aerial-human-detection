@@ -1,0 +1,33 @@
+name: Build ARM64 Docker Image
+
+on:
+  push:
+    tags:
+      - 'dev*'
+      - 'v*'
+
+jobs:
+  get_tags:
+    name: Get Image Tag
+    runs-on: ubuntu-latest
+    outputs:
+      image_version: ${{ steps.image_name.outputs.image_version }}
+    steps:
+      - name: Set up image version
+        id: image_name
+        run: |
+          echo "image_version=dev1" >> $GITHUB_OUTPUT
+
+  main_build:
+    needs: get_tags
+    name: Build and push ARM64 Docker image
+    uses: ./.github/workflows/build-workflow.yaml
+    permissions:
+      packages: write
+      contents: read
+    with:
+      build_context: .devcontainer
+      dockerfile: .devcontainer/Dockerfile
+      image_name: yolo_realsense
+      image_version: ${{ needs.get_tags.outputs.image_version }}
+      runs_on: ubuntu-24.04-arm
