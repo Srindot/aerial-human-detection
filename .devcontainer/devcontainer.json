@@ -1,6 +1,6 @@
 {
   "name": "Jetson Xavier ROS Noetic + RealSense Dev",
-  "image": "docker pull ghcr.io/srindot/yolo_realsense:dev1",
+  "image": "ghcr.io/srindot/yolo_realsense:dev1",
 
   // Allow full device and GPU access for Jetson & camera
   "privileged": true,
@@ -24,7 +24,7 @@
   },
 
   // Mount your source directory into the container
-  "workspaceFolder": "/home/container_user/catkin_make",
+  "workspaceFolder": "/home/container_user/catkin_make/src/realsense_human_detector",
   "workspaceMount": "type=bind,source=${localWorkspaceFolder},target=/home/container_user/catkin_make/src/realsense_human_detector",
 
   // VS Code extensions

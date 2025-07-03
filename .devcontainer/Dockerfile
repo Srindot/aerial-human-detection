@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/l4t-jetpack:r35.4.1
+FROM nvcr.io/nvidia/l4t-pytorch:r35.4.1-pth2.2-py3
 
 LABEL maintainer="srinath.bhamidipati@research.iiit.ac.in"
 
