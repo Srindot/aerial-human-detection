@@ -1,6 +1,6 @@
 {
   "name": "Jetson Xavier ROS Noetic + RealSense Dev",
-  "image": "ghcr.io/srindot/ros_noetic_realsense:latest",
+  "image": "docker pull ghcr.io/srindot/yolo_realsense:dev1",
 
   // Allow full device and GPU access for Jetson & camera
   "privileged": true,
