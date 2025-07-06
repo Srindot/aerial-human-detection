@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM nvcr.io/nvidia/l4t-pytorch:r35.3.1-pth2.0-py3
 
 LABEL maintainer="srinath.bhamidipati@research.iiit.ac.in"
 
@@ -8,7 +8,7 @@ ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8
 
-# --- Basic packages ---
+# --- System dependencies ---
 RUN apt-get update && apt-get install -y --no-install-recommends \
     tzdata locales curl sudo gnupg2 lsb-release software-properties-common \
     build-essential cmake git wget \
@@ -22,12 +22,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# --- ROS Noetic ---
-RUN echo "deb http://packages.ros.org/ros/ubuntu focal main" > /etc/apt/sources.list.d/ros-latest.list \
-    && curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - \
-    && apt-get update && apt-get install -y ros-noetic-ros-base
+# --- ROS Noetic base ---
+RUN echo "deb http://packages.ros.org/ros/ubuntu focal main" > /etc/apt/sources.list.d/ros-latest.list && \
+    curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - && \
+    apt-get update && apt-get install -y ros-noetic-ros-base
 
-# --- Add user ---
+# --- Create user ---
 RUN useradd -m -s /bin/bash container_user && \
     echo "container_user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
@@ -45,19 +45,20 @@ RUN cd /home/container_user/librealsense/build && make install && \
     cp /home/container_user/librealsense/config/99-realsense-libusb.rules /etc/udev/rules.d/ && \
     udevadm control --reload-rules && udevadm trigger
 
-# --- ROS packages ---
+# --- ROS Packages ---
 COPY rosPkgs.list /tmp/rosPkgs.list
 RUN apt-get update && \
     xargs -a /tmp/rosPkgs.list apt-get install -y --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
-# --- Install Python + YOLOv8 + PyTorch + OpenCV ---
+# --- Python dependencies: Ultralytics YOLO + others ---
 COPY yolo-requirements.txt /tmp/yolo-requirements.txt
 RUN pip3 install --upgrade pip && \
     pip3 install --no-cache-dir -r /tmp/yolo-requirements.txt
 
-# --- ROS setup ---
+# --- ROS setup in bashrc ---
 RUN echo "source /opt/ros/noetic/setup.bash" >> /home/container_user/.bashrc
 
+# --- Final Setup ---
 WORKDIR /home/container_user
 USER container_user
