@@ -8,5 +8,3 @@ ros-noetic-image-transport
 ros-noetic-vision-msgs
 ros-noetic-message-generation
 ros-noetic-ddynamic-reconfigure
-ros-noetic-rviz
-python3-rospkg
