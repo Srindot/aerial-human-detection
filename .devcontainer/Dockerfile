@@ -32,15 +32,16 @@ WORKDIR /home/container_user
 RUN git config --global http.postBuffer 524288000 && \
     git clone --depth 1 --branch v2.56.2 https://github.com/IntelRealSense/librealsense.git && \
     cd librealsense && mkdir build && cd build && \
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_CUDA=ON -DBUILD_EXAMPLES=OFF -DBUILD_TOOLS=OFF && \
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_CUDA=ON && \
     make -j2
 
 # --- Install librealsense system-wide ---
 USER root
 RUN cd /home/container_user/librealsense/build && make install && \
     cp /home/container_user/librealsense/config/99-realsense-libusb.rules /etc/udev/rules.d/ && \
-    udevadm control --reload-rules && udevadm trigger && \
     ldconfig
+
+# NOTE: udevadm control --reload-rules && udevadm trigger should be run at runtime instead
 
 # --- Install RealSense ROS wrapper ---
 RUN apt-get update && \
