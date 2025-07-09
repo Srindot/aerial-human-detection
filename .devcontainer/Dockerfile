@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev \
     libssl-dev libusb-1.0-0-dev libudev-dev pkg-config \
     libgtk-3-dev libgl1-mesa-glx \
+    libpsl-dev \
     cmake git wget curl build-essential && \
     rm -rf /var/lib/apt/lists/*
 
