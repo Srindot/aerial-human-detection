@@ -2,9 +2,9 @@ FROM nvcr.io/nvidia/l4t-pytorch:r35.3.1-pth2.0-py3
 
 LABEL maintainer="srinath.bhamidipati@research.iiit.ac.in"
 
-ENV DEBIAN_FRONTEND=noninteractive
-ENV TZ=Asia/Kolkata
-ENV LANG=en_US.UTF-8 \
+ENV DEBIAN_FRONTEND=noninteractive \
+    TZ=Asia/Kolkata \
+    LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
     LC_ALL=en_US.UTF-8
 
@@ -36,22 +36,23 @@ WORKDIR /home/container_user
 
 # --- Librealsense ---
 RUN git config --global http.postBuffer 524288000 && \
-    git clone --branch v2.56.2 https://github.com/IntelRealSense/librealsense.git && \
+    git clone --depth 1 --branch v2.56.2 https://github.com/IntelRealSense/librealsense.git && \
     cd librealsense && mkdir build && cd build && \
-    cmake .. && make -j$(nproc)
+    cmake .. -DCMAKE_BUILD_TYPE=Release && \
+    make -j$(nproc)
 
 USER root
 RUN cd /home/container_user/librealsense/build && make install && \
     cp /home/container_user/librealsense/config/99-realsense-libusb.rules /etc/udev/rules.d/ && \
     udevadm control --reload-rules && udevadm trigger
 
-# --- ROS Packages ---
+# --- ROS packages ---
 COPY rosPkgs.list /tmp/rosPkgs.list
 RUN apt-get update && \
     xargs -a /tmp/rosPkgs.list apt-get install -y --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
-# --- Python dependencies: Ultralytics YOLO + others ---
+# --- Python dependencies ---
 COPY yolo-requirements.txt /tmp/yolo-requirements.txt
 RUN pip3 install --upgrade pip && \
     pip3 install --no-cache-dir -r /tmp/yolo-requirements.txt
@@ -59,6 +60,6 @@ RUN pip3 install --upgrade pip && \
 # --- ROS setup in bashrc ---
 RUN echo "source /opt/ros/noetic/setup.bash" >> /home/container_user/.bashrc
 
-# --- Final Setup ---
+# --- Set working directory and switch back to user ---
 WORKDIR /home/container_user
 USER container_user
