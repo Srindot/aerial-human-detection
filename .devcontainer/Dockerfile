@@ -32,7 +32,7 @@ WORKDIR /home/container_user
 RUN git config --global http.postBuffer 524288000 && \
     git clone --depth 1 --branch v2.56.2 https://github.com/IntelRealSense/librealsense.git && \
     cd librealsense && mkdir build && cd build && \
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_CUDA=ON && \
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_CUDA=ON -DBUILD_EXAMPLES=OFF -DBUILD_TOOLS=OFF && \
     make -j2
 
 # --- Install librealsense system-wide ---
