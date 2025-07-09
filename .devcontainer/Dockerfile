@@ -12,18 +12,23 @@ ENV DEBIAN_FRONTEND=noninteractive \
 RUN useradd -m -s /bin/bash container_user && \
     echo "container_user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# --- Install missing build dependencies for librealsense ---
+# --- Fix expired ROS GPG key ---
+RUN apt-key del F42ED6FBAB17C654 || true && \
+    apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys F42ED6FBAB17C654
+
+# --- Install system dependencies for librealsense ---
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrandr-dev \
     libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev \
     libssl-dev libusb-1.0-0-dev libudev-dev pkg-config \
-    libgtk-3-dev libgl1-mesa-glx && \
+    libgtk-3-dev libgl1-mesa-glx \
+    cmake git wget curl build-essential && \
     rm -rf /var/lib/apt/lists/*
 
+# --- Clone and build librealsense (RealSense SDK v2.56.2) ---
 USER container_user
 WORKDIR /home/container_user
 
-# --- Clone and build librealsense (RealSense SDK v2.56.2) ---
 RUN git config --global http.postBuffer 524288000 && \
     git clone --depth 1 --branch v2.56.2 https://github.com/IntelRealSense/librealsense.git && \
     cd librealsense && mkdir build && cd build && \
