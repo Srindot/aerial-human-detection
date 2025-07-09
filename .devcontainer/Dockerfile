@@ -16,15 +16,18 @@ RUN useradd -m -s /bin/bash container_user && \
 RUN apt-key del F42ED6FBAB17C654 || true && \
     apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys F42ED6FBAB17C654
 
-# --- Install system dependencies for librealsense ---
+# --- Install system dependencies for librealsense and ROS build ---
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrandr-dev \
     libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev \
     libssl-dev libusb-1.0-0-dev libudev-dev pkg-config \
     libgtk-3-dev libgl1-mesa-glx \
     libpsl-dev \
-    cmake git wget curl build-essential && \
-    rm -rf /var/lib/apt/lists/*
+    cmake git wget curl build-essential \
+    python3-pip \
+    python3-catkin-tools \
+    ros-noetic-catkin \
+    && rm -rf /var/lib/apt/lists/*
 
 # --- Clone and build librealsense (RealSense SDK v2.56.2) ---
 USER container_user
@@ -49,13 +52,18 @@ RUN cd /home/container_user/librealsense/build && make install && \
 
 # NOTE: udevadm control --reload-rules && udevadm trigger should be run at runtime instead
 
-# --- Install RealSense ROS wrapper ---
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends ros-noetic-realsense2-camera && \
-    rm -rf /var/lib/apt/lists/*
+# --- Build RealSense ROS wrapper from source ---
+USER container_user
+WORKDIR /home/container_user
+RUN mkdir -p catkin_ws/src && cd catkin_ws/src && \
+    git clone -b ros1-legacy https://github.com/IntelRealSense/realsense-ros.git
+
+WORKDIR /home/container_user/catkin_ws
+RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_make -DCATKIN_ENABLE_TESTING=OFF -DCMAKE_BUILD_TYPE=Release"
 
 # --- Install additional ROS packages from rosPkgs.list ---
 COPY rosPkgs.list /tmp/rosPkgs.list
+USER root
 RUN apt-get update && \
     xargs -a /tmp/rosPkgs.list apt-get install -y --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
@@ -66,7 +74,8 @@ RUN pip3 install --upgrade pip && \
     pip3 install --no-cache-dir -r /tmp/yolo-requirements.txt
 
 # --- ROS setup for container_user ---
-RUN echo "source /opt/ros/noetic/setup.bash" >> /home/container_user/.bashrc
+RUN echo "source /opt/ros/noetic/setup.bash" >> /home/container_user/.bashrc && \
+    echo "source /home/container_user/catkin_ws/devel/setup.bash" >> /home/container_user/.bashrc
 
 # --- Final working directory and user ---
 USER container_user
