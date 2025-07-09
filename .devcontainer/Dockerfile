@@ -12,6 +12,14 @@ ENV DEBIAN_FRONTEND=noninteractive \
 RUN useradd -m -s /bin/bash container_user && \
     echo "container_user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
+# --- Install missing build dependencies for librealsense ---
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libxrandr-dev \
+    libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev \
+    libssl-dev libusb-1.0-0-dev libudev-dev pkg-config \
+    libgtk-3-dev libgl1-mesa-glx && \
+    rm -rf /var/lib/apt/lists/*
+
 USER container_user
 WORKDIR /home/container_user
 
@@ -19,8 +27,8 @@ WORKDIR /home/container_user
 RUN git config --global http.postBuffer 524288000 && \
     git clone --depth 1 --branch v2.56.2 https://github.com/IntelRealSense/librealsense.git && \
     cd librealsense && mkdir build && cd build && \
-    cmake .. -DCMAKE_BUILD_TYPE=Release && \
-    make -j$(nproc)
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_WITH_CUDA=ON && \
+    make -j2
 
 # --- Install librealsense system-wide ---
 USER root
