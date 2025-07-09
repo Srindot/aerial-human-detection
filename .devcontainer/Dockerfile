@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/l4t-pytorch:r35.3.1-pth2.0-py3
+FROM dustynv/ros:noetic-pytorch-l4t-r35.3.1
 
 LABEL maintainer="srinath.bhamidipati@research.iiit.ac.in"
 
@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential cmake git wget \
     libssl-dev libusb-1.0-0-dev pkg-config \
     libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev libgtk-3-dev \
+    libudev-dev libopencv-dev \
     v4l-utils udev bc \
     libjpeg-dev libpng-dev \
     python3-dev python3-pip python3-yaml python3-zmq \
@@ -21,11 +22,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && dpkg-reconfigure --frontend noninteractive tzdata \
     && locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# --- ROS Noetic base ---
-RUN echo "deb http://packages.ros.org/ros/ubuntu focal main" > /etc/apt/sources.list.d/ros-latest.list && \
-    curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add - && \
-    apt-get update && apt-get install -y ros-noetic-ros-base
 
 # --- Create user ---
 RUN useradd -m -s /bin/bash container_user && \
