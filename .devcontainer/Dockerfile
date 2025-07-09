@@ -12,8 +12,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
 RUN apt-get update && apt-get install -y --no-install-recommends \
     tzdata locales curl sudo gnupg2 lsb-release software-properties-common \
     build-essential cmake git wget \
-    libssl-dev libusb-1.0-0-dev pkg-config \
-    libglfw3-dev libgtk-3-dev libudev-dev \
+    libssl-dev libusb-1.0-0-dev libudev-dev pkg-config \
+    libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev libgtk-3-dev \
     v4l-utils udev bc \
     libjpeg-dev libpng-dev \
     python3-dev python3-pip python3-yaml \
@@ -22,14 +22,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# --- Create user ---
+# --- Create non-root user ---
 RUN useradd -m -s /bin/bash container_user && \
     echo "container_user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 USER container_user
 WORKDIR /home/container_user
 
-# --- Librealsense ---
+# --- Librealsense SDK (v2.56.2) ---
 RUN git config --global http.postBuffer 524288000 && \
     git clone --depth 1 --branch v2.56.2 https://github.com/IntelRealSense/librealsense.git && \
     cd librealsense && mkdir build && cd build && \
@@ -41,20 +41,25 @@ RUN cd /home/container_user/librealsense/build && make install && \
     cp /home/container_user/librealsense/config/99-realsense-libusb.rules /etc/udev/rules.d/ && \
     udevadm control --reload-rules && udevadm trigger
 
-# --- ROS packages ---
+# --- Install RealSense ROS wrapper ---
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ros-noetic-realsense2-camera && \
+    rm -rf /var/lib/apt/lists/*
+
+# --- Install ROS packages from list ---
 COPY rosPkgs.list /tmp/rosPkgs.list
 RUN apt-get update && \
     xargs -a /tmp/rosPkgs.list apt-get install -y --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
-# --- Python dependencies ---
+# --- Install Python dependencies for YOLO ---
 COPY yolo-requirements.txt /tmp/yolo-requirements.txt
 RUN pip3 install --upgrade pip && \
     pip3 install --no-cache-dir -r /tmp/yolo-requirements.txt
 
-# --- ROS setup in bashrc ---
+# --- Set up ROS environment for user ---
 RUN echo "source /opt/ros/noetic/setup.bash" >> /home/container_user/.bashrc
 
-# --- Set working directory and switch back to user ---
+# --- Final: return to container_user and workspace ---
 WORKDIR /home/container_user
 USER container_user
