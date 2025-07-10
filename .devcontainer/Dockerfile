@@ -20,23 +20,23 @@ RUN apt-key del F42ED6FBAB17C654 || true && \
 COPY rosPkgs.list /tmp/rosPkgs.list
 COPY yolo-requirements.txt /tmp/yolo-requirements.txt
 
-# --- Install system and core ROS tools ---
+# --- Install system & librealsense dependencies ---
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrandr-dev libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev \
     libssl-dev libusb-1.0-0-dev libudev-dev pkg-config \
     libgtk-3-dev libgl1-mesa-glx libpsl-dev \
     python3-pip python3-catkin-tools python3-rospkg \
     cmake git wget curl build-essential \
-    ros-noetic-catkin && \
-    rm -rf /var/lib/apt/lists/*
+    ros-noetic-catkin \
+    && rm -rf /var/lib/apt/lists/*
 
-# --- Filter out problematic packages and install the rest ---
+# --- Filter out known-broken ROS packages before installing ---
 RUN grep -v -E '(^libopencv|cv_bridge|vision-msgs)' /tmp/rosPkgs.list > /tmp/ros-clean.list && \
     apt-get update && \
     xargs -a /tmp/ros-clean.list apt-get install -y --no-install-recommends || true && \
     rm -rf /var/lib/apt/lists/*
 
-# --- Clone and build librealsense (v2.56.2) ---
+# --- Clone & build librealsense (CUDA + Jetson safe) ---
 USER container_user
 WORKDIR /home/container_user
 
@@ -56,6 +56,7 @@ USER root
 RUN cd /home/container_user/librealsense/build && make install && \
     cp /home/container_user/librealsense/config/99-realsense-libusb.rules /etc/udev/rules.d/ && \
     ldconfig
+# NOTE: You may need to run `udevadm trigger` at runtime
 
 # --- Clone and build RealSense ROS wrapper ---
 USER container_user
@@ -71,10 +72,10 @@ USER root
 RUN pip3 install --upgrade pip && \
     pip3 install --no-cache-dir -r /tmp/yolo-requirements.txt
 
-# --- ROS environment setup for container_user ---
+# --- Source ROS and workspace setup for user ---
 RUN echo "source /opt/ros/noetic/setup.bash" >> /home/container_user/.bashrc && \
     echo "source /home/container_user/catkin_ws/devel/setup.bash" >> /home/container_user/.bashrc
 
-# --- Final working dir and user ---
+# --- Final user and working directory ---
 USER container_user
 WORKDIR /home/container_user
