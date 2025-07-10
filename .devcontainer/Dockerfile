@@ -16,20 +16,20 @@ RUN useradd -m -s /bin/bash container_user && \
 RUN apt-key del F42ED6FBAB17C654 || true && \
     apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys F42ED6FBAB17C654
 
-# --- Pre-copy ROS and YOLO dependencies to avoid cache busting ---
+# --- Pre-copy ROS and YOLO dependency lists ---
 COPY rosPkgs.list /tmp/rosPkgs.list
 COPY yolo-requirements.txt /tmp/yolo-requirements.txt
 
-# --- Install system dependencies ---
+# --- Install system and ROS dependencies ---
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrandr-dev libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev \
     libssl-dev libusb-1.0-0-dev libudev-dev pkg-config \
     libgtk-3-dev libgl1-mesa-glx libpsl-dev \
     python3-pip python3-catkin-tools python3-rospkg \
     cmake git wget curl build-essential \
-    # ROS-related for realsense build
     ros-noetic-catkin \
-    && rm -rf /var/lib/apt/lists/*
+    && xargs -a /tmp/rosPkgs.list apt-get install -y --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
 
 # --- Clone and build librealsense (v2.56.2) ---
 USER container_user
@@ -51,7 +51,6 @@ USER root
 RUN cd /home/container_user/librealsense/build && make install && \
     cp /home/container_user/librealsense/config/99-realsense-libusb.rules /etc/udev/rules.d/ && \
     ldconfig
-# NOTE: udev rules will need `udevadm trigger` at runtime
 
 # --- Build RealSense ROS wrapper ---
 USER container_user
@@ -62,16 +61,8 @@ RUN mkdir -p catkin_ws/src && cd catkin_ws/src && \
 WORKDIR /home/container_user/catkin_ws
 RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_make -DCATKIN_ENABLE_TESTING=OFF -DCMAKE_BUILD_TYPE=Release"
 
-# --- Install additional ROS dependencies ---
-USER root
-RUN apt-get update && \
-    xargs -a /tmp/rosPkgs.list apt-get install -y --no-install-recommends && \
-    rm -rf /var/lib/apt/lists/*
-
-# (Optional - resolve missing ROS deps with rosdep)
-# RUN rosdep update && rosdep install --from-paths /home/container_user/catkin_ws/src --ignore-src -r -y
-
 # --- Install Python dependencies for YOLO ---
+USER root
 RUN pip3 install --upgrade pip && \
     pip3 install --no-cache-dir -r /tmp/yolo-requirements.txt
 
