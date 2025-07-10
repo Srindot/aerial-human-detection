@@ -16,19 +16,25 @@ RUN useradd -m -s /bin/bash container_user && \
 RUN apt-key del F42ED6FBAB17C654 || true && \
     apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys F42ED6FBAB17C654
 
-# --- Pre-copy ROS and YOLO dependency lists ---
+# --- Pre-copy dependency lists ---
 COPY rosPkgs.list /tmp/rosPkgs.list
 COPY yolo-requirements.txt /tmp/yolo-requirements.txt
 
-# --- Install system and ROS dependencies ---
+# --- Install system and essential ROS build dependencies ---
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrandr-dev libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev \
     libssl-dev libusb-1.0-0-dev libudev-dev pkg-config \
     libgtk-3-dev libgl1-mesa-glx libpsl-dev \
     python3-pip python3-catkin-tools python3-rospkg \
     cmake git wget curl build-essential \
-    ros-noetic-catkin \
-    && xargs -a /tmp/rosPkgs.list apt-get install -y --no-install-recommends && \
+    ros-noetic-catkin && \
+    rm -rf /var/lib/apt/lists/*
+
+# --- Install selected ROS packages excluding OpenCV-breaking ones ---
+# Remove problematic OpenCV packages from list before installing
+RUN grep -v -E '(^libopencv|cv_bridge|vision-msgs)' /tmp/rosPkgs.list > /tmp/ros-clean.list && \
+    apt-get update && \
+    xargs -a /tmp/ros-clean.list apt-get install -y --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
 # --- Clone and build librealsense (v2.56.2) ---
@@ -52,7 +58,7 @@ RUN cd /home/container_user/librealsense/build && make install && \
     cp /home/container_user/librealsense/config/99-realsense-libusb.rules /etc/udev/rules.d/ && \
     ldconfig
 
-# --- Build RealSense ROS wrapper ---
+# --- Clone and build RealSense ROS wrapper ---
 USER container_user
 WORKDIR /home/container_user
 RUN mkdir -p catkin_ws/src && cd catkin_ws/src && \
@@ -66,10 +72,10 @@ USER root
 RUN pip3 install --upgrade pip && \
     pip3 install --no-cache-dir -r /tmp/yolo-requirements.txt
 
-# --- ROS environment setup for container_user ---
+# --- ROS environment setup ---
 RUN echo "source /opt/ros/noetic/setup.bash" >> /home/container_user/.bashrc && \
     echo "source /home/container_user/catkin_ws/devel/setup.bash" >> /home/container_user/.bashrc
 
-# --- Set final working directory and user ---
+# --- Final user and working dir ---
 USER container_user
 WORKDIR /home/container_user
