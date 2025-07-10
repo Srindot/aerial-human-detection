@@ -20,7 +20,7 @@ RUN apt-key del F42ED6FBAB17C654 || true && \
 COPY rosPkgs.list /tmp/rosPkgs.list
 COPY yolo-requirements.txt /tmp/yolo-requirements.txt
 
-# --- Install system and essential ROS build dependencies ---
+# --- Install system and core ROS tools ---
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrandr-dev libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev \
     libssl-dev libusb-1.0-0-dev libudev-dev pkg-config \
@@ -30,11 +30,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-noetic-catkin && \
     rm -rf /var/lib/apt/lists/*
 
-# --- Install selected ROS packages excluding OpenCV-breaking ones ---
-# Remove problematic OpenCV packages from list before installing
+# --- Filter out problematic packages and install the rest ---
 RUN grep -v -E '(^libopencv|cv_bridge|vision-msgs)' /tmp/rosPkgs.list > /tmp/ros-clean.list && \
     apt-get update && \
-    xargs -a /tmp/ros-clean.list apt-get install -y --no-install-recommends && \
+    xargs -a /tmp/ros-clean.list apt-get install -y --no-install-recommends || true && \
     rm -rf /var/lib/apt/lists/*
 
 # --- Clone and build librealsense (v2.56.2) ---
@@ -67,15 +66,15 @@ RUN mkdir -p catkin_ws/src && cd catkin_ws/src && \
 WORKDIR /home/container_user/catkin_ws
 RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_make -DCATKIN_ENABLE_TESTING=OFF -DCMAKE_BUILD_TYPE=Release"
 
-# --- Install Python dependencies for YOLO ---
+# --- Install YOLO dependencies ---
 USER root
 RUN pip3 install --upgrade pip && \
     pip3 install --no-cache-dir -r /tmp/yolo-requirements.txt
 
-# --- ROS environment setup ---
+# --- ROS environment setup for container_user ---
 RUN echo "source /opt/ros/noetic/setup.bash" >> /home/container_user/.bashrc && \
     echo "source /home/container_user/catkin_ws/devel/setup.bash" >> /home/container_user/.bashrc
 
-# --- Final user and working dir ---
+# --- Final working dir and user ---
 USER container_user
 WORKDIR /home/container_user

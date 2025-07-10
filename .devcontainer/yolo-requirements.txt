@@ -1,6 +1,6 @@
 numpy==1.23.5
 ultralytics>=8.0.0
-opencv-python-headless  # safer on Jetson
+opencv-python-headless  # ✅ headless avoids GTK/OpenGL conflict on Jetson
 matplotlib
 PyYAML
 pillow
