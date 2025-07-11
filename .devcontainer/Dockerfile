@@ -12,29 +12,38 @@ ENV DEBIAN_FRONTEND=noninteractive \
 RUN useradd -m -s /bin/bash container_user && \
     echo "container_user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# --- Fix expired ROS GPG key ---
+# --- Add ROS Noetic APT source and key ---
+RUN apt-get update && apt-get install -y curl gnupg2 lsb-release && \
+    echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros-latest.list && \
+    curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
+
+# --- Fix expired NVIDIA ROS GPG key ---
 RUN apt-key del F42ED6FBAB17C654 || true && \
     apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys F42ED6FBAB17C654
 
-# --- Pre-copy dependency lists ---
-COPY rosPkgs.list /tmp/rosPkgs.list
+# --- Copy YOLO dependencies ---
 COPY yolo-requirements.txt /tmp/yolo-requirements.txt
 
-# --- Install system & librealsense dependencies ---
+# --- Install system & ROS + librealsense dependencies ---
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrandr-dev libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev \
     libssl-dev libusb-1.0-0-dev libudev-dev pkg-config \
     libgtk-3-dev libgl1-mesa-glx libpsl-dev \
-    python3-pip python3-catkin-tools python3-rospkg \
+    python3-pip python3-catkin-tools python3-rospkg python3-rosdep \
     cmake git wget curl build-essential \
     ros-noetic-catkin \
+    ros-noetic-nav-msgs \
+    ros-noetic-ddynamic-reconfigure \
+    ros-noetic-image-transport \
+    ros-noetic-sensor-msgs \
+    ros-noetic-std-msgs \
+    ros-noetic-message-generation \
+    ros-noetic-roslaunch \
+    ros-noetic-rospy \
     && rm -rf /var/lib/apt/lists/*
 
-# --- Filter out known-broken ROS packages before installing ---
-RUN grep -v -E '(^libopencv|cv_bridge|vision-msgs)' /tmp/rosPkgs.list > /tmp/ros-clean.list && \
-    apt-get update && \
-    xargs -a /tmp/ros-clean.list apt-get install -y --no-install-recommends || true && \
-    rm -rf /var/lib/apt/lists/*
+# --- Initialize rosdep (safe, even if not used directly) ---
+RUN rosdep init || true && rosdep update
 
 # --- Clone & build librealsense (CUDA + Jetson safe) ---
 USER container_user
