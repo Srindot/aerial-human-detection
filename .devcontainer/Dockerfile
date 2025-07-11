@@ -1,4 +1,4 @@
-FROM dustynv/ros:noetic-pytorch-l4t-r35.3.1
+FROM nvcr.io/nvidia/l4t-jetpack:r35.3.1
 
 LABEL maintainer="srinath.bhamidipati@research.iiit.ac.in"
 
