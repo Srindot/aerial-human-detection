@@ -21,10 +21,7 @@ RUN apt-get update && apt-get install -y curl gnupg2 lsb-release && \
 RUN apt-key del F42ED6FBAB17C654 || true && \
     apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-keys F42ED6FBAB17C654
 
-# --- Copy YOLO dependencies ---
-COPY yolo-requirements.txt /tmp/yolo-requirements.txt
-
-# --- Install system & ROS + librealsense dependencies ---
+# --- Install system, ROS, and build dependencies ---
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrandr-dev libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev \
     libssl-dev libusb-1.0-0-dev libudev-dev pkg-config \
@@ -45,7 +42,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # --- Initialize rosdep (safe, even if not used directly) ---
 RUN rosdep init || true && rosdep update
 
-# --- Clone & build librealsense (CUDA + Jetson safe) ---
+# --- Build and install librealsense ---
 USER container_user
 WORKDIR /home/container_user
 
@@ -60,12 +57,10 @@ RUN git config --global http.postBuffer 524288000 && \
         -DBUILD_GRAPHICAL_EXAMPLES=OFF && \
     make -j2
 
-# --- Install librealsense system-wide ---
 USER root
 RUN cd /home/container_user/librealsense/build && make install && \
     cp /home/container_user/librealsense/config/99-realsense-libusb.rules /etc/udev/rules.d/ && \
     ldconfig
-# NOTE: You may need to run `udevadm trigger` at runtime
 
 # --- Clone and build RealSense ROS wrapper ---
 USER container_user
@@ -76,8 +71,9 @@ RUN mkdir -p catkin_ws/src && cd catkin_ws/src && \
 WORKDIR /home/container_user/catkin_ws
 RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_make -DCATKIN_ENABLE_TESTING=OFF -DCMAKE_BUILD_TYPE=Release"
 
-# --- Install YOLO dependencies ---
+# --- Copy and install YOLO dependencies ---
 USER root
+COPY yolo-requirements.txt /tmp/yolo-requirements.txt
 RUN pip3 install --upgrade pip && \
     pip3 install --no-cache-dir -r /tmp/yolo-requirements.txt
 
