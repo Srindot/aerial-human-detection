@@ -39,6 +39,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-noetic-rospy \
     && rm -rf /var/lib/apt/lists/*
 
+# --- Install PyTorch with CUDA (Jetson wheel) ---
+RUN python3 -m pip install --upgrade pip && \
+    python3 -m pip install numpy==1.26.1 && \
+    wget https://developer.download.nvidia.com/compute/redist/jp/v511/pytorch/torch-2.0.0+nv23.05-cp38-cp38-linux_aarch64.whl && \
+    python3 -m pip install torch-2.0.0+nv23.05-cp38-cp38-linux_aarch64.whl && \
+    rm torch-2.0.0+nv23.05-cp38-cp38-linux_aarch64.whl
+
 # --- Initialize rosdep (safe, even if not used directly) ---
 RUN rosdep init || true && rosdep update
 
@@ -71,15 +78,9 @@ RUN mkdir -p catkin_ws/src && cd catkin_ws/src && \
 WORKDIR /home/container_user/catkin_ws
 RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_make -DCATKIN_ENABLE_TESTING=OFF -DCMAKE_BUILD_TYPE=Release"
 
-# --- Copy and install YOLO dependencies ---
-USER root
-COPY yolo-requirements.txt /tmp/yolo-requirements.txt
-RUN pip3 install --upgrade pip && \
-    pip3 install --no-cache-dir -r /tmp/yolo-requirements.txt
-
 # --- Source ROS and workspace setup for user ---
-RUN echo "source /opt/ros/noetic/setup.bash" >> /home/container_user/.bashrc && \
-    echo "source /home/container_user/catkin_ws/devel/setup.bash" >> /home/container_user/.bashrc
+USER root
+RUN echo "source /opt/ros/noetic/setup.bash" >> /home/container_user/.bashrc 
 
 # --- Final user and working directory ---
 USER container_user

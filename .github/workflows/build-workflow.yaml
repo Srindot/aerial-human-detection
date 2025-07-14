@@ -49,10 +49,6 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-        
-      - name: Log in to NVIDIA NGC (nvcr.io)
-        run: echo "${{ secrets.NGC_API_KEY }}" | docker login nvcr.io -u ${{ secrets.NGC_USERNAME }} --password-stdin
-
 
       - name: Build and push ARM64 Docker image
         uses: docker/build-push-action@v6
