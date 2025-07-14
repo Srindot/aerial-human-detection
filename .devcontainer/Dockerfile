@@ -26,6 +26,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxrandr-dev libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev \
     libssl-dev libusb-1.0-0-dev libudev-dev pkg-config \
     libgtk-3-dev libgl1-mesa-glx libpsl-dev \
+    libeigen3-dev \
     python3-pip python3-catkin-tools python3-rospkg python3-rosdep \
     cmake git wget curl build-essential \
     ros-noetic-catkin \
@@ -50,6 +51,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-noetic-ddynamic-reconfigure \
     ros-noetic-visualization-msgs \
     && rm -rf /var/lib/apt/lists/*
+
 
 
 
