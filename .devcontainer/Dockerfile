@@ -29,20 +29,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-pip python3-catkin-tools python3-rospkg python3-rosdep \
     cmake git wget curl build-essential \
     ros-noetic-catkin \
-    ros-noetic-nav-msgs \
-    ros-noetic-ddynamic-reconfigure \
-    ros-noetic-image-transport \
-    ros-noetic-sensor-msgs \
-    ros-noetic-std-msgs \
-    ros-noetic-message-generation \
     ros-noetic-roslaunch \
     ros-noetic-rospy \
+    ros-noetic-message-generation \
+    ros-noetic-std-msgs \
+    ros-noetic-sensor-msgs \
+    ros-noetic-nav-msgs \
+    ros-noetic-image-transport \
     ros-noetic-nodelet \
     ros-noetic-nodelet-core \
     ros-noetic-pluginlib \
     ros-noetic-class-loader \
     ros-noetic-cv-bridge \
+    ros-noetic-image-proc \
+    ros-noetic-camera-info-manager \
+    ros-noetic-tf \
+    ros-noetic-tf2 \
+    ros-noetic-tf2-ros \
+    ros-noetic-diagnostic-updater \
+    ros-noetic-ddynamic-reconfigure \
+    ros-noetic-visualization-msgs \
     && rm -rf /var/lib/apt/lists/*
+
 
 
 # --- Install PyTorch with CUDA (Jetson wheel) ---
