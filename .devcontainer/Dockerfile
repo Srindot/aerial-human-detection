@@ -41,7 +41,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # --- Install PyTorch with CUDA (Jetson wheel) ---
 RUN python3 -m pip install --upgrade pip && \
-    python3 -m pip install numpy==1.26.1 && \
+    python3 -m pip install --no-cache-dir numpy==1.24.4 && \
     wget https://developer.download.nvidia.com/compute/redist/jp/v511/pytorch/torch-2.0.0+nv23.05-cp38-cp38-linux_aarch64.whl && \
     python3 -m pip install torch-2.0.0+nv23.05-cp38-cp38-linux_aarch64.whl && \
     rm torch-2.0.0+nv23.05-cp38-cp38-linux_aarch64.whl
