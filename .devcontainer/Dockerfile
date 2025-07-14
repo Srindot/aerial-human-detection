@@ -37,6 +37,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-noetic-message-generation \
     ros-noetic-roslaunch \
     ros-noetic-rospy \
+    ros-noetic-nodelet \
+    ros-noetic-nodelet-core \
+    ros-noetic-pluginlib \
+    ros-noetic-class-loader \
     && rm -rf /var/lib/apt/lists/*
 
 # --- Install PyTorch with CUDA (Jetson wheel) ---
