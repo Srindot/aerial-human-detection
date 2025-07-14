@@ -41,7 +41,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-noetic-nodelet-core \
     ros-noetic-pluginlib \
     ros-noetic-class-loader \
+    ros-noetic-cv-bridge \
     && rm -rf /var/lib/apt/lists/*
+
 
 # --- Install PyTorch with CUDA (Jetson wheel) ---
 RUN python3 -m pip install --upgrade pip && \
