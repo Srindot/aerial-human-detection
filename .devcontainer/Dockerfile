@@ -52,9 +52,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-noetic-visualization-msgs \
     && rm -rf /var/lib/apt/lists/*
 
-
-
-
 # --- Install PyTorch with CUDA (Jetson wheel) ---
 RUN python3 -m pip install --upgrade pip && \
     python3 -m pip install --no-cache-dir numpy==1.24.4 && \
