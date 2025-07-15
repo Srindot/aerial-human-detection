@@ -98,6 +98,32 @@ RUN /bin/bash -c "source /opt/ros/noetic/setup.bash && catkin_make -DCATKIN_ENAB
 USER root
 RUN echo "source /opt/ros/noetic/setup.bash" >> /home/container_user/.bashrc 
 
+# FROM ghcr.io/srindot/noetic_realsense:dev1
+
+# LABEL maintainer="srinath.bhamidipati@research.iiit.ac.in"
+
+USER root
+
+# Install dependencies for torchvision build (best for Jetson)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libjpeg-dev zlib1g-dev libpng-dev libavcodec-dev libavformat-dev libswscale-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python packages required for YOLO
+RUN python3 -m pip install --upgrade --no-cache-dir pip \
+    && python3 -m pip install --no-cache-dir --upgrade numpy wheel setuptools \
+    && python3 -m pip install --no-cache-dir opencv-python>=4.5.1 \
+    && python3 -m pip install --no-cache-dir ultralytics
+
+RUN python3 -m pip install --upgrade pip setuptools importlib-metadata wheel
+
+
+# Install torchvision from source for ARM/Jetson compatibility (match torch==2.0.0)
+RUN git clone --branch v0.15.2 https://github.com/pytorch/vision.git \
+    && cd vision \
+    && python3 setup.py install \
+    && cd .. && rm -rf vision
+
 # --- Final user and working directory ---
 USER container_user
 WORKDIR /home/container_user
