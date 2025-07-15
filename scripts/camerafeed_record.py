@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# records the raw camera feed and then saves the feed to this_project/
+
 import rospy
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
@@ -23,7 +25,7 @@ class LiveCameraRecorder:
 
         # Filename with compact, unique timestamp
         timestamp = datetime.now().strftime("%y%m%d_%H%M%S")
-        self.filename = os.path.join(output_dir, f"cam_{timestamp}.mp4")
+        self.filename = os.path.join(output_dir, f"cam_feed_{timestamp}.mp4")
 
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         self.out = cv2.VideoWriter(self.filename, fourcc, self.fps, (self.width, self.height))

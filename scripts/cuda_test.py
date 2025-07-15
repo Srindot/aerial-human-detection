@@ -1,5 +1,7 @@
 import torch
 
+# checks for cuda on the device
+
 def main():
     print("Checking CUDA device availability...\n")
 
