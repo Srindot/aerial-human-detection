@@ -1,3 +1,5 @@
+# saves the raw rgb camera feed from the realsense camera
+
 import rospy
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
