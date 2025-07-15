@@ -11,7 +11,7 @@ class YOLORealsenseNode:
         rospy.init_node('yolo_realsense_detector', anonymous=True)
 
         self.bridge = CvBridge()
-        self.model = YOLO("yolov8n.pt")  # or yolov8s.pt, yolov8m.pt, etc.
+        self.model = YOLO("yolov8n.pt")  
 
         self.image_sub = rospy.Subscriber("/camera/color/image_raw", Image, self.callback)
         rospy.loginfo("YOLOv8 Realsense Detector Node Started")
