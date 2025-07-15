@@ -117,7 +117,6 @@ RUN python3 -m pip install --upgrade --no-cache-dir pip \
 
 RUN python3 -m pip install --upgrade pip setuptools importlib-metadata wheel
 
-
 # Install torchvision from source for ARM/Jetson compatibility (match torch==2.0.0)
 RUN git clone --branch v0.15.2 https://github.com/pytorch/vision.git \
     && cd vision \
