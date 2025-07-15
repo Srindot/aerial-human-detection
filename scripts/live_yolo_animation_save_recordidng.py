@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Performs yolo on live camera feed and then saves the output dir 
+
 import rospy
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
