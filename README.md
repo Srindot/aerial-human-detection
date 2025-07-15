@@ -18,8 +18,8 @@ This repository contains a Dockerized setup for **running YOLO-based human detec
 1. **Clone the repo**
 
    ```bash
-   git clone <this-repo-url>
-   cd <repo-name>
+   git clone https://github.com/Srindot/aerial-human-detection.git
+   cd aerial-human-detection
    ```
 
 2. **Open in VS Code**
