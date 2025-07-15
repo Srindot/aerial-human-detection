@@ -4,42 +4,35 @@ import rospy
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 import cv2
-from ultralytics import YOLO
+from yolo_detector import YOLODetector  # <-- Your modular class
 
 class YOLORealsenseNode:
     def __init__(self):
         rospy.init_node('yolo_realsense_detector', anonymous=True)
 
-        self.bridge = CvBridge()
-        self.model = YOLO("yolov8n.pt")  
+        # Parameters (optional)
+        self.model_path = rospy.get_param("~model_path", "yolov8n.pt")
+        self.topic = rospy.get_param("~topic", "/camera/color/image_raw")
+        self.target_class = rospy.get_param("~target_class", "person")
 
-        self.image_sub = rospy.Subscriber("/camera/color/image_raw", Image, self.callback)
-        rospy.loginfo("YOLOv8 Realsense Detector Node Started")
-    
+        self.bridge = CvBridge()
+        self.detector = YOLODetector(model_path=self.model_path, target_class=self.target_class)
+
+        self.image_sub = rospy.Subscriber(self.topic, Image, self.callback, queue_size=1)
+        rospy.loginfo(f"YOLOv8 Realsense Detector Node Started. Subscribed to {self.topic}")
+
     def callback(self, data):
         try:
-            # Convert ROS Image to OpenCV image
             frame = self.bridge.imgmsg_to_cv2(data, desired_encoding="bgr8")
         except Exception as e:
-            rospy.logerr("Could not convert image: %s", e)
+            rospy.logerr(f"Image conversion error: {e}")
             return
 
-        # Run YOLOv8 inference
-        results = self.model(frame)[0]
+        # Inference and annotation
+        annotated_frame, _ = self.detector.detect(frame, draw=True)
 
-        # Draw bounding boxes for people
-        for box in results.boxes:
-            cls = int(box.cls[0])
-            if self.model.names[cls] == 'person':
-                x1, y1, x2, y2 = map(int, box.xyxy[0])
-                conf = float(box.conf[0])
-                label = f"{self.model.names[cls]} {conf:.2f}"
-                cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
-                cv2.putText(frame, label, (x1, y1 - 10),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-        # Show the frame
-        cv2.imshow("YOLOv8 Realsense People Detection", frame)
+        # Display result
+        cv2.imshow("YOLOv8 Detection", annotated_frame)
         cv2.waitKey(1)
 
     def run(self):
