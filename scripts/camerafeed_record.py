@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# records the raw camera feed and then saves the feed to this_project/
+# records the raw camera feed and then saves the feed to this_project/cam_feed_{time}.mp4
 
 import rospy
 from sensor_msgs.msg import Image
