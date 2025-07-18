@@ -1,7 +1,0 @@
-<launch>
-  <node name="yolo_detector" pkg="realsense_human_detector" type="yolo_detector.py" output="screen">
-    <param name="image_topic" value="/camera/color/image_raw"/>
-    <param name="bbox_topic" value="/yolo/bboxes"/>
-    <param name="model_path" value="/home/container_user/models/yolov8n.pt"/>
-  </node>
-</launch>
