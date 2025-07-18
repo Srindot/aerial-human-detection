@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "roscore",
+      "label": "Session 1: roscore",
       "type": "shell",
       "command": "bash",
       "args": [
@@ -18,7 +18,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Launch RealSense Camera",
+      "label": "Session 2: Launch RealSense Camera",
       "type": "shell",
       "command": "bash",
       "args": [
@@ -33,13 +33,14 @@
       },
       "problemMatcher": []
     },
+
     {
-      "label": "Record RealSense ROS Bag",
+      "label": "Session 3: camera_feed_save",
       "type": "shell",
       "command": "bash",
       "args": [
         "-c",
-        "source /opt/ros/noetic/setup.bash && rosbag record /camera/color/image_raw /camera/depth/image_rect_raw /camera/color/camera_info /camera/depth/camera_info -o src/realsense_human_detector/realsense_rgbd"
+        "source /opt/ros/noetic/setup.bash && python3 scripts/camera_feed_save.py"
       ],
       "presentation": {
         "echo": true,
@@ -49,13 +50,31 @@
       },
       "problemMatcher": []
     },
+
     {
-      "label": "Run Human Detector Script",
+      "label": "Session 4: live_yolo_save_output",
       "type": "shell",
       "command": "bash",
       "args": [
         "-c",
-        "source /opt/ros/noetic/setup.bash && LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1 python3 src/realsense_human_detector/scripts/test.py"
+        "source /opt/ros/noetic/setup.bash && python3 scripts/live_yolo_save_output.py"
+      ],
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+
+    {
+      "label": "Session 5: live_yolo_publish_output",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-c",
+        "source /opt/ros/noetic/setup.bash && python3 scripts/live_yolo_publish_output.py"
       ],
       "presentation": {
         "echo": true,
