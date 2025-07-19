@@ -38,4 +38,3 @@ Select and run any script listed above
    - `Session 6: live_yolo_display_output`: To display the annotations and the rgb feed from the realsense real time in a window.
 
 
-#### If you encounter any issue, raise a issue.
