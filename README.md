@@ -24,6 +24,7 @@ This repository contains a Dockerized setup for **running YOLO-based human detec
 2. **Open in VS Code** (`Not working, run it locally without docker`)
 
    - Press `Ctrl+Shift+P` → **Rebuild and Reopen in Container**
+   - > Make sure to ssh into the xavier using vscode for the below step
 
 3. **Run Scripts**
 
