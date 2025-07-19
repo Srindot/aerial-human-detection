@@ -8,7 +8,7 @@ This repository contains a Dockerized setup for **running YOLO-based human detec
 - `camera_feed_save.py` – Records raw-RGB feed of realsense to `raw_camera_output/raw_camera_output_year_month_day_hour_minute_seconds.mp4`.
 - `cuda_test.py` – Verifies CUDA availability
 - `live_yolo_display_output.py` – Runs YOLO and displays annotated frames in a window. (Not useful in ssh)
-- `live_yolo_publish_output.py` – Publishes YOLO bounding boxes to a ROS topic which is `yolo_output`.
+- `live_yolo_publish_output.py` – Publishes YOLO bounding boxes to a ROS topic which is `yolo_bounding_boxes`.
 - `live_yolo_save_output.py` – Saves YOLO-annotated mp4 video output to `yolo_output/yolo_output_year_month_day_hour_minute_seconds.mp4`
 ---
 
