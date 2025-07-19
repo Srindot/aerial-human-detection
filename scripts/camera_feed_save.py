@@ -20,7 +20,7 @@ class RawCameraRecorder:
         output_dir = os.path.join(script_dir, "../raw_camera_output")
         os.makedirs(output_dir, exist_ok=True)
 
-        timestamp = datetime.now().strftime("%y%m%d_%H%M%S")
+        timestamp = datetime.now().strftime("%y_%m_%d_%H_%M_%S")
         self.filename = os.path.join(output_dir, f"raw_camera_output_{timestamp}.mp4")
 
         self.out = None
